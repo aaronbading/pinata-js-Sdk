@@ -1,5 +1,7 @@
 const fs = require('fs');
 require("dotenv").config();
+// const json_file = require("./1.json");
+
 const yourPinataApiKey = process.env.yourPinataApiKey;
 const yourPinataSecretApiKey = process.env.yourPinataSecretApiKey;
 
@@ -14,10 +16,14 @@ pinata.testAuthentication().then((result) => {
     console.log(err);
 });
 
-const readableStreamForFile = fs.createReadStream('./1.png');
+let raw_data = fs.readFileSync('./1.json');
+let parsed_data = JSON.parse(raw_data);
+console.log(parsed_data);
+//console.log(parsed_data.attributes);
+
 const options = {
     pinataMetadata: {
-        name: "MyCustomName",
+        name: "This is json format ",
         keyvalues: {
             customKey: 'customValue',
             customKey2: 'customValue2'
@@ -27,7 +33,7 @@ const options = {
         cidVersion: 0
     }
 };
-pinata.pinFileToIPFS(readableStreamForFile, options).then((result) => {
+pinata.pinJSONToIPFS(parsed_data, options).then((result) => {
     //handle results here
     console.log(result);
 }).catch((err) => {
